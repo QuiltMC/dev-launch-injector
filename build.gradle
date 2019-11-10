@@ -1,0 +1,50 @@
+plugins {
+    id 'java'
+    id 'maven-publish'
+    id 'checkstyle'
+}
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+group = 'net.fabricmc'
+archivesBaseName = 'dev-launch-wrapper'
+version = '0.1.0'
+
+def ENV = System.getenv()
+version = version + "+" + (ENV.BUILD_NUMBER ? ("build." + ENV.BUILD_NUMBER) : "local")
+
+sourceSets {
+    main {
+        java.srcDirs = ['src']
+    }
+}
+
+repositories {
+	mavenCentral()
+}
+
+checkstyle {
+	configFile = file("checkstyle.xml")
+	toolVersion = '8.25'
+}
+
+publishing {
+	publications {
+		mavenJava(MavenPublication) {
+			artifact(jar)
+		}
+	}
+
+	repositories {
+		if (project.hasProperty('mavenPass')) {
+			maven {
+				url = "http://mavenupload.modmuss50.me/"
+				credentials {
+					username = "buildslave"
+					password = project.getProperty('mavenPass')
+				}
+			}
+		}
+	}
+}
