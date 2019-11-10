@@ -1,0 +1,10 @@
+/bin/
+/lib/
+/run/
+/build/
+/.classpath
+/.project
+/.settings
+/.gradle
+*.jar
+.checkstyle
