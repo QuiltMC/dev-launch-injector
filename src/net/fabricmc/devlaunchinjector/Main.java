@@ -24,9 +24,9 @@ import java.util.Map;
  *
  * <p>Example invocation:
  * {@code java
- * -Dfabric.dlw.env=client
- * -Dfabric.dlw.main=something.pkg.Main
- * -Dfabric.dlw.config=/home/user/some/config.cfg
+ * -Dfabric.dli.env=client
+ * -Dfabric.dli.main=something.pkg.Main
+ * -Dfabric.dli.config=/home/user/some/config.cfg
  * -cp [...]
  * net.fabricmc.devlaunchinjector.Main
  * [pass-through args...]}
@@ -45,16 +45,16 @@ import java.util.Map;
  */
 public final class Main {
 	public static void main(String[] args) throws Throwable {
-		String env = System.clearProperty("fabric.dlw.env"); // desired environment, for config section selection
-		String main = System.clearProperty("fabric.dlw.main"); // main class to invoke afterwards
-		String config = System.clearProperty("fabric.dlw.config"); // config file location
+		String env = System.clearProperty("fabric.dli.env"); // desired environment, for config section selection
+		String main = System.clearProperty("fabric.dli.main"); // main class to invoke afterwards
+		String config = System.clearProperty("fabric.dli.config"); // config file location
 		Path configFile;
 
 		if (main == null) {
-			System.err.println("error: missing fabric.dlw.main property, can't launch");
+			System.err.println("error: missing fabric.dli.main property, can't launch");
 			System.exit(1);
 		} else if (env == null || config == null) {
-			warnNoop("missing fabric.dlw.env or fabric.dlw.config properties");
+			warnNoop("missing fabric.dli.env or fabric.dli.config properties");
 		} else if (!Files.isRegularFile(configFile = Paths.get(config))
 				|| !Files.isReadable(configFile)) {
 			warnNoop("missing or unreadable config file ("+configFile+")");
