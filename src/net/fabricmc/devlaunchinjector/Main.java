@@ -1,4 +1,4 @@
-package net.fabricmc.devlaunchwrapper;
+package net.fabricmc.devlaunchinjector;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -28,7 +28,7 @@ import java.util.Map;
  * -Dfabric.dlw.main=something.pkg.Main
  * -Dfabric.dlw.config=/home/user/some/config.cfg
  * -cp [...]
- * net.fabricmc.devlaunchwrapper.Main
+ * net.fabricmc.devlaunchinjector.Main
  * [pass-through args...]}
  *
  * <p>Example config:
@@ -140,6 +140,6 @@ public final class Main {
 	}
 
 	private static void warnNoop(String msg) {
-		System.out.printf("warning: dev-launch-wrapper in pass-through mode, %s%n", msg);
+		System.out.printf("warning: dev-launch-injector in pass-through mode, %s%n", msg);
 	}
 }

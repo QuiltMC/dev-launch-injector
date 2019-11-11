@@ -8,7 +8,7 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 group = 'net.fabricmc'
-archivesBaseName = 'dev-launch-wrapper'
+archivesBaseName = 'dev-launch-injector'
 version = '0.1.0'
 
 def ENV = System.getenv()
