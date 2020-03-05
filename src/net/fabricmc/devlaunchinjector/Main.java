@@ -12,6 +12,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Target program wrapper for injecting additional arguments or system properties based on a config file.
@@ -55,7 +57,7 @@ public final class Main {
 			System.exit(1);
 		} else if (env == null || config == null) {
 			warnNoop("missing fabric.dli.env or fabric.dli.config properties");
-		} else if (!Files.isRegularFile(configFile = Paths.get(config))
+		} else if (!Files.isRegularFile(configFile = Paths.get(decodeEscaped(config)))
 				|| !Files.isReadable(configFile)) {
 			warnNoop("missing or unreadable config file ("+configFile+")");
 		} else {
@@ -141,5 +143,28 @@ public final class Main {
 
 	private static void warnNoop(String msg) {
 		System.out.printf("warning: dev-launch-injector in pass-through mode, %s%n", msg);
+	}
+
+	/**
+	 * Decode tokens in the form @@x where x is 1-4 hex chars encoding an UTF-16 code unit.
+	 *
+	 * <p>Example: 'a@@20b' -> 'a b'
+	 */
+	private static String decodeEscaped(String s) {
+		if (s.indexOf("@@") < 0) return s;
+
+		Matcher matcher = Pattern.compile("@@([0-9a-fA-F]{1,4})").matcher(s);
+		StringBuilder ret = new StringBuilder(s.length());
+		int start = 0;
+
+		while (matcher.find()) {
+			ret.append(s, start, matcher.start());
+			ret.append((char) Integer.parseInt(matcher.group(1), 16));
+			start = matcher.end();
+		}
+
+		ret.append(s, start, s.length());
+
+		return ret.toString();
 	}
 }
