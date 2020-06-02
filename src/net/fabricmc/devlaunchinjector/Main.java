@@ -90,6 +90,7 @@ public final class Main {
 		final int STATE_NONE = 0;
 		final int STATE_ARGS = 1;
 		final int STATE_PROPERTIES = 2;
+		final int STATE_SKIP = 3;
 
 		try (BufferedReader reader = Files.newBufferedReader(file)) {
 			String line;
@@ -111,6 +112,7 @@ public final class Main {
 					} else if (line.startsWith(env)) {
 						offset = env.length();
 					} else { // wrong env, skip
+						state = STATE_SKIP;
 						continue;
 					}
 
@@ -134,6 +136,8 @@ public final class Main {
 					String value = pos >= 0 ? line.substring(pos + 1).trim() : "";
 
 					extraProperties.put(key, value);
+				} else if (state == STATE_SKIP) {
+					// Wrong environment for the section, skip the line
 				} else { // shouldn't happen
 					throw new IllegalStateException();
 				}
