@@ -9,7 +9,7 @@ targetCompatibility = 1.8
 
 group = 'net.fabricmc'
 archivesBaseName = 'dev-launch-injector'
-version = '0.2.0'
+version = '0.2.1'
 
 def ENV = System.getenv()
 version = version + "+" + (ENV.BUILD_NUMBER ? ("build." + ENV.BUILD_NUMBER) : "local")
