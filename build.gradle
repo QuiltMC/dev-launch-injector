@@ -7,18 +7,12 @@ plugins {
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
-group = 'net.fabricmc'
+group = 'org.quiltmc'
 archivesBaseName = 'dev-launch-injector'
-version = '0.2.1'
+version = '1.0.0'
 
 def ENV = System.getenv()
-version = version + "+" + (ENV.BUILD_NUMBER ? ("build." + ENV.BUILD_NUMBER) : "local")
-
-sourceSets {
-    main {
-        java.srcDirs = ['src']
-    }
-}
+version = version
 
 repositories {
 	mavenCentral()
@@ -32,17 +26,18 @@ checkstyle {
 publishing {
 	publications {
 		mavenJava(MavenPublication) {
-			artifact(jar)
+			from components.java
 		}
 	}
 
 	repositories {
-		if (project.hasProperty('mavenPass')) {
-			maven {
-				url = "http://mavenupload.modmuss50.me/"
+		if (ENV.MAVEN_URL) {
+			repositories.maven {
+				url = ENV.MAVEN_URL
+
 				credentials {
-					username = "buildslave"
-					password = project.getProperty('mavenPass')
+					username = ENV.MAVEN_USERNAME
+					password = ENV.MAVEN_PASSWORD
 				}
 			}
 		}

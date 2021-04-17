@@ -1,4 +1,4 @@
-package net.fabricmc.devlaunchinjector;
+package org.quiltmc.devlaunchinjector;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -26,17 +26,17 @@ import java.util.regex.Pattern;
  *
  * <p>Example invocation:
  * {@code java
- * -Dfabric.dli.env=client
- * -Dfabric.dli.main=something.pkg.Main
- * -Dfabric.dli.config=/home/user/some/config.cfg
+ * -Dquilt.dli.env=client
+ * -Dquilt.dli.main=something.pkg.Main
+ * -Dquilt.dli.config=/home/user/some/config.cfg
  * -cp [...]
- * net.fabricmc.devlaunchinjector.Main
+ * org.quiltmc.devlaunchinjector.Main
  * [pass-through args...]}
  *
  * <p>Example config:
  * <pre> {@code
  * commonProperties
- *   fabric.development=true
+ *   quilt.development=true
  * clientProperties
  *   java.library.path=/home/user/.gradle/caches/fabric-loom/natives/1.14.4
  *   org.lwjgl.librarypat=/home/user/.gradle/caches/fabric-loom/natives/1.14.4
@@ -47,16 +47,16 @@ import java.util.regex.Pattern;
  */
 public final class Main {
 	public static void main(String[] args) throws Throwable {
-		String env = System.clearProperty("fabric.dli.env"); // desired environment, for config section selection
-		String main = System.clearProperty("fabric.dli.main"); // main class to invoke afterwards
-		String config = System.clearProperty("fabric.dli.config"); // config file location
+		String env = System.clearProperty("quilt.dli.env"); // desired environment, for config section selection
+		String main = System.clearProperty("quilt.dli.main"); // main class to invoke afterwards
+		String config = System.clearProperty("quilt.dli.config"); // config file location
 		Path configFile;
 
 		if (main == null) {
-			System.err.println("error: missing fabric.dli.main property, can't launch");
+			System.err.println("error: missing quilt.dli.main property, can't launch");
 			System.exit(1);
 		} else if (env == null || config == null) {
-			warnNoop("missing fabric.dli.env or fabric.dli.config properties");
+			warnNoop("missing quilt.dli.env or quilt.dli.config properties");
 		} else if (!Files.isRegularFile(configFile = Paths.get(decodeEscaped(config)))
 				|| !Files.isReadable(configFile)) {
 			warnNoop("missing or unreadable config file ("+configFile+")");
@@ -77,7 +77,7 @@ public final class Main {
 					System.setProperty(e.getKey(), e.getValue());
 				}
 			} catch (IOException e) {
-				warnNoop("parsing failed: "+e.toString());
+				warnNoop("parsing failed: "+ e);
 			}
 		}
 
@@ -155,7 +155,7 @@ public final class Main {
 	 * <p>Example: 'a@@20b' -> 'a b'
 	 */
 	private static String decodeEscaped(String s) {
-		if (s.indexOf("@@") < 0) return s;
+		if (!s.contains("@@")) return s;
 
 		Matcher matcher = Pattern.compile("@@([0-9a-fA-F]{1,4})").matcher(s);
 		StringBuilder ret = new StringBuilder(s.length());
