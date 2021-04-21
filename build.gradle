@@ -9,7 +9,7 @@ targetCompatibility = 1.8
 
 group = 'org.quiltmc'
 archivesBaseName = 'dev-launch-injector'
-version = '1.0.0'
+version = '1.0.1'
 
 def ENV = System.getenv()
 version = version
@@ -21,6 +21,22 @@ repositories {
 checkstyle {
 	configFile = file("checkstyle.xml")
 	toolVersion = '8.25'
+}
+
+// Target JDK 8
+tasks.withType(JavaCompile).configureEach {
+	if (JavaVersion.current().isJava9Compatible()) {
+		options.release.set(8)
+	} else {
+		sourceCompatibility = JavaVersion.VERSION_1_8
+		targetCompatibility = JavaVersion.VERSION_1_8
+	}
+}
+
+java {
+	// Publish sources and javadoc
+	withSourcesJar()
+	withJavadocJar()
 }
 
 publishing {
